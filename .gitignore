@@ -1,0 +1,9 @@
+.DS_Store
+node_modules/
+
+# Arquivos originais (não usados pela página)
+/videos/
+/Capas/
+/Imagem 2/
+/reference/
+/WhatsApp Image*.jpeg

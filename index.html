@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Nexo — Marketing para Lojas de Seminovos</title>
+  <meta name="description" content="De 30 a 46 carros vendidos por mês. Marketing para lojas de seminovos.">
+  <meta name="theme-color" content="#050A1C">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://placehold.co" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Montserrat', 'system-ui', 'sans-serif'] },
+          colors: {
+            ink: { DEFAULT: '#050A1C', 900: '#040815', 800: '#0B1436', 700: '#0F1A45' },
+            paper: '#F4F5FA',
+            navy: '#0B1230',
+            slate: { soft: '#5A6283', mute: '#8C95B8', light: '#B9BFD6' },
+            accent: { DEFAULT: '#4C9BFF', deep: '#2B5BF2', royal: '#2B4BF2' },
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body { background: #050A1C; }
+
+    /* Rótulos de seção */
+    .eyebrow { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 9.6px; letter-spacing: .26em; text-transform: uppercase; color: #4C9BFF; }
+    .eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 9999px; background: #4C9BFF; box-shadow: 0 0 10px 2px rgba(76,155,255,.55); }
+    .eyebrow--light { color: #2B5BF2; }
+    .eyebrow--light::before { background: #2B5BF2; box-shadow: 0 0 10px 2px rgba(43,91,242,.4); }
+    @media (min-width: 768px) { .eyebrow { font-size: 13px; } }
+
+    /* Títulos de seção */
+    .h-section { font-size: 27px; line-height: 30px; font-weight: 800; letter-spacing: -.01em; }
+    @media (min-width: 768px) { .h-section { font-size: 46px; line-height: 1.06; } }
+
+    /* Botão principal */
+    .btn-cta { position: relative; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; gap: 16px; border-radius: 9999px; color: #fff; font-weight: 800; text-transform: uppercase; background: linear-gradient(90deg, #4A9BFF 0%, #3577F7 55%, #2B4BF2 100%); box-shadow: 0 1px 0 rgba(255,255,255,.35) inset, 0 10px 30px -6px rgba(43,91,242,.55), 0 4px 10px -2px rgba(43,91,242,.35); transition: transform .2s ease; }
+    .btn-cta::after { content: ''; position: absolute; inset: -6px; z-index: -1; border-radius: inherit; background: radial-gradient(60% 80% at 50% 70%, rgba(59,110,255,.6), transparent 70%); opacity: .55; filter: blur(10px); transition: opacity .2s ease; }
+    .btn-cta svg { transition: transform .2s ease; }
+    .btn-cta:hover { transform: translateY(-2px); }
+    .btn-cta:hover::after { opacity: 1; }
+    .btn-cta:hover svg { transform: translateX(3px); }
+    .btn-cta:active { transform: translateY(0) scale(.98); }
+    .btn-cta:focus-visible { outline: 2px solid #9CC6FF; outline-offset: 3px; }
+    .btn-cta:disabled { opacity: .7; cursor: progress; }
+
+    /* Texto em gradiente */
+    .grad-hero { background: linear-gradient(90deg, #FFFFFF 0%, #D6E6FF 40%, #6BB0FF 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .grad-num { background: linear-gradient(180deg, #FFFFFF 30%, #9DB4FF 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+    /* Sublinhado em pincel */
+    .brush { position: relative; display: inline-block; }
+    .brush svg { position: absolute; left: -4%; bottom: -.2em; width: 108%; height: .3em; overflow: visible; pointer-events: none; }
+
+    /* Campos do formulário */
+    .field { position: relative; display: flex; align-items: center; height: 44px; border-radius: 12px; background: rgba(5,10,30,.55); border: 1px solid rgba(120,140,220,.22); }
+    .field:focus-within { border-color: rgba(76,155,255,.75); box-shadow: 0 0 0 3px rgba(76,155,255,.18); }
+    .field.is-invalid { border-color: rgba(255,110,140,.8); }
+    .field > svg { position: absolute; left: 15px; width: 15px; height: 15px; color: #9AA6CF; pointer-events: none; }
+    .field input, .field select { width: 100%; height: 100%; background: transparent; border: 0; outline: 0; color: #EEF1FA; font-size: 13.5px; padding: 0 16px 0 42px; appearance: none; -webkit-appearance: none; border-radius: inherit; }
+    .field input::placeholder { color: #8D96B8; opacity: 1; }
+    .field select { cursor: pointer; }
+    .field select:invalid { color: #8D96B8; }
+    .field select option { color: #0B1230; }
+    @media (min-width: 768px) { .field { height: 52px; } .field input, .field select { font-size: 15px; } }
+
+    /* Fundo em grade com perspectiva */
+    .perspective-grid { background-image: linear-gradient(rgba(140,160,230,.13) 1px, transparent 1px), linear-gradient(90deg, rgba(140,160,230,.13) 1px, transparent 1px); background-size: 52px 52px; transform: perspective(420px) rotateX(58deg); transform-origin: 50% 0; }
+
+    /* Marquees */
+    .marquee { display: flex; width: max-content; animation: marquee var(--dur, 30s) linear infinite; }
+    .marquee--rev { animation-direction: reverse; }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    /* Colunas de criativos rolando na vertical */
+    .reel { display: flex; flex-direction: column; animation: reel var(--dur, 40s) linear infinite; animation-delay: var(--delay, 0s); will-change: transform; }
+    .reel--down { animation-direction: reverse; }
+    .reel-group { display: flex; flex-direction: column; gap: 9px; padding-bottom: 9px; }
+    @media (min-width: 768px) { .reel-group { gap: 16px; padding-bottom: 16px; } }
+    @keyframes reel { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+    .outline-text { color: transparent; -webkit-text-stroke: 1px rgba(170,185,235,.22); }
+
+    /* Fades de borda */
+    .fade-y { -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 82%, transparent 100%); mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 82%, transparent 100%); }
+    .fade-x { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 10%, #000 90%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 10%, #000 90%, transparent 100%); }
+
+    /* Carrossel */
+    .no-scrollbar { scrollbar-width: none; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+
+    /* Cards de depoimento */
+    .testimonial { background: radial-gradient(70% 55% at 50% 40%, #1E2D70 0%, #16215A 45%, #0F1636 100%); box-shadow: 0 30px 40px -24px rgba(15,22,54,.45), 0 12px 24px -12px rgba(15,22,54,.3), 0 2px 6px rgba(15,22,54,.12); }
+
+    /* Cards do método */
+    .method-card { background: linear-gradient(165deg, #16245E 0%, #111C4C 45%, #0C153C 100%); border: 1px solid rgba(100,130,230,.22); box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 20px 40px -20px rgba(0,0,0,.6); }
+    .icon-tile { background: linear-gradient(160deg, #4C8DFF 0%, #2B55F5 100%); box-shadow: 0 1px 0 rgba(255,255,255,.35) inset, 0 10px 24px -6px rgba(43,85,245,.65); }
+
+    .check-tile { background: linear-gradient(160deg, #3B7BFF 0%, #2B5BF2 100%); box-shadow: 0 10px 20px -8px rgba(43,91,242,.55), 0 3px 6px -2px rgba(43,91,242,.3); }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .marquee, .reel { animation: none; }
+      .btn-cta, .btn-cta svg, .btn-cta::after { transition: none; }
+    }
+  </style>
+</head>
+<body class="font-sans text-white antialiased overflow-x-hidden">
+
+<main>
+  <!-- ============ HERO + FORMULÁRIO ============ -->
+  <section class="relative overflow-hidden bg-ink">
+    <div class="absolute inset-0" aria-hidden="true">
+      <img src="https://placehold.co/1080x1600/16173f/16173f" alt="" width="1080" height="1600" fetchpriority="high" class="h-full w-full object-cover opacity-70">
+      <div class="absolute inset-0" style="background: radial-gradient(60% 30% at 85% 22%, rgba(120,60,200,.35), transparent 70%), linear-gradient(180deg, rgba(8,12,38,.85) 0%, rgba(24,20,66,.55) 25%, rgba(10,14,40,.75) 50%, #050A1C 80%);"></div>
+      <div class="perspective-grid absolute inset-x-[-50%] bottom-[-8%] h-[38%] opacity-60"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-[1120px] px-[19px] pt-[92px] md:px-8 md:pt-[120px]">
+      <div class="max-w-[760px]">
+        <span class="inline-flex h-[29px] items-center gap-[12px] rounded-full border border-[#5A82E6]/35 bg-[#1C2A66]/40 px-[12px] text-[9.2px] font-bold uppercase tracking-[.05em] text-[#5AA2FF] md:h-[34px] md:px-4 md:text-[11px]">
+          <span class="h-[7px] w-[7px] rounded-full bg-[#5AA2FF] shadow-[0_0_8px_rgba(90,162,255,.8)]"></span>
+          Marketing para lojas de seminovos
+        </span>
+
+        <h1 class="mt-[21px] max-w-[300px] text-[48px] font-extrabold leading-[51px] tracking-[-.015em] text-[#F4F6FF] md:mt-6 md:max-w-none md:text-[68px] md:leading-[1.02]">
+          De 30 a <span class="grad-hero whitespace-nowrap">46 carros</span> vendidos por mês.
+        </h1>
+
+        <p class="mt-[25px] max-w-[560px] text-[14.5px] leading-[21.3px] text-[#D3D8EA] md:text-[17px] md:leading-[1.5]">
+          É o que lojas de seminovos clientes da Nexo vendem hoje, com Instagram, anúncio e processo comercial trabalhando juntos, <strong class="font-bold text-white underline decoration-[#2B5BF2]/70 decoration-[3px] underline-offset-[3px] [text-decoration-skip-ink:none]">sem depender de indicação</strong>.
+        </p>
+
+        <p class="mt-[21px] flex items-start gap-[12px] text-[11px] leading-[16px] font-semibold text-[#8C95B8] md:text-[13px]">
+          <svg class="mt-[1.5px] h-[13px] w-[13px] shrink-0 text-[#5AA2FF] md:h-[15px] md:w-[15px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          Chamamos você no WhatsApp em até 5 minutos, em horário comercial.
+        </p>
+      </div>
+
+      <!-- Card do formulário -->
+      <div id="form" class="relative mt-[30px] max-w-[560px] scroll-mt-6 rounded-[24px] border border-[#6A82D8]/25 p-[21px] pb-[27px] shadow-[0_30px_60px_-30px_rgba(0,0,0,.8)] md:p-8" style="background: linear-gradient(170deg, rgba(22,32,82,.92) 0%, rgba(12,20,56,.94) 50%, rgba(8,13,38,.96) 100%);">
+        <span class="pointer-events-none absolute -right-px top-[8%] h-[60%] w-px" style="background: linear-gradient(180deg, rgba(110,160,255,0), rgba(110,160,255,.9) 25%, rgba(200,70,140,.7) 70%, rgba(200,70,140,0));" aria-hidden="true"></span>
+        <span class="pointer-events-none absolute right-[20px] -top-px h-px w-[30%]" style="background: linear-gradient(90deg, rgba(110,160,255,0), rgba(110,160,255,.8));" aria-hidden="true"></span>
+
+        <h2 class="text-[15.5px] font-extrabold leading-[20px] text-white md:text-[20px] md:leading-tight">Receba uma ligação personalizada</h2>
+        <p class="mt-[2px] text-[12px] leading-[18.7px] text-[#AEB5CF] md:mt-1 md:text-[14px] md:leading-[1.45]">Preencha e um especialista da Nexo entra em contato com você.</p>
+
+        <form class="lead-form mt-[18px] space-y-[9px] md:space-y-3" novalidate>
+          <label class="field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            <span class="sr-only">Seu nome</span>
+            <input type="text" name="nome" placeholder="Seu nome" autocomplete="name" required minlength="2">
+          </label>
+          <label class="field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>
+            <span class="sr-only">Seu melhor e-mail</span>
+            <input type="email" name="email" placeholder="Seu melhor e-mail" autocomplete="email" inputmode="email" required>
+          </label>
+          <label class="field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r=".6" fill="currentColor"/></svg>
+            <span class="sr-only">Nome da sua empresa no Instagram</span>
+            <input type="text" name="instagram" placeholder="Nome da sua empresa no Instagram" autocomplete="off" autocapitalize="off" required>
+          </label>
+          <label class="field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3.5l1.8 4.5-2.3 1.4a11 11 0 0 0 6.1 6.1l1.4-2.3L20 15.5V19a1.5 1.5 0 0 1-1.6 1.5C10.6 20 4 13.4 3.5 5.6A1.5 1.5 0 0 1 5 4Z"/></svg>
+            <span class="sr-only">WhatsApp com DDD</span>
+            <span class="pointer-events-none absolute left-[38px] flex items-center gap-[8px] text-[13px] font-bold text-white" aria-hidden="true">
+              <svg class="h-[12px] w-[17px] rounded-[2px]" viewBox="0 0 20 14"><rect width="20" height="14" fill="#1FA34A"/><path d="M10 2 18 7 10 12 2 7Z" fill="#FFD43B"/><circle cx="10" cy="7" r="2.7" fill="#1F4AA8"/></svg>
+              +55
+              <span class="ml-[2px] h-[16px] w-px bg-white/20"></span>
+            </span>
+            <input type="tel" name="whatsapp" placeholder="WhatsApp com DDD" autocomplete="tel-national" inputmode="numeric" required class="!pl-[94px]">
+          </label>
+
+          <p class="pt-[5px] text-[11.2px] font-bold text-[#E4E8F5] md:text-[13px]">Quantos carros você vende por mês?</p>
+          <label class="field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v16h16"/><path d="m7 15 4-4 3 3 5-6"/></svg>
+            <span class="sr-only">Carros vendidos por mês</span>
+            <select name="carros_mes" required>
+              <option value="" disabled selected>Selecione a quantidade</option>
+              <option>0 a 8</option>
+              <option>8 a 15</option>
+              <option>15 a 20</option>
+              <option>20 a 30</option>
+              <option>30 a 40</option>
+              <option>Acima de 40</option>
+            </select>
+            <svg class="!left-auto right-[16px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </label>
+
+          <div class="pt-[3px]">
+            <button type="submit" class="btn-cta h-[49px] w-full text-[11.7px] tracking-[.02em] md:h-[54px] md:text-[14px]">
+              <span data-label>Receber mais informações</span>
+              <svg class="h-[15px] w-[15px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+
+          <p data-status class="hidden" role="status" aria-live="polite"></p>
+
+          <p class="flex gap-[10px] pt-[6px] text-[10.4px] leading-[16.4px] text-[#8C95B8] md:text-[13px] md:leading-[1.4]">
+            <svg class="mt-[1px] h-[13px] w-[13px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+            Garantimos a segurança total de seus dados. Serão usados apenas para contato.
+          </p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Prova social -->
+    <div class="relative pt-[92px] pb-[64px] md:pt-[110px]">
+      <p class="px-[19px] text-center text-[9.7px] font-semibold uppercase leading-[16.4px] tracking-[.25em] text-[#8C95B8] md:text-[12px] md:leading-[1.6]">
+        <strong class="font-extrabold text-white">+R$50 milhões</strong> em contratos gerados para loja de seminovos como estas
+      </p>
+      <div class="fade-x mt-[33px] overflow-hidden">
+        <div class="marquee items-center" style="--dur: 28s">
+          <div class="flex shrink-0 items-center gap-[40px] pr-[40px]">
+            <img src="assets/logos/aguilar.png" alt="Aguilar Veículos" width="455" height="202" loading="lazy" decoding="async" class="h-[46px] w-auto md:h-[60px]">
+            <img src="assets/logos/falcon.png" alt="Falcon Veículos" width="341" height="314" loading="lazy" decoding="async" class="h-[46px] w-auto md:h-[60px]">
+            <img src="assets/logos/topvel.png" alt="Topvel Seminovos" width="386" height="244" loading="lazy" decoding="async" class="h-[46px] w-auto md:h-[60px]">
+            <img src="assets/logos/excelencia.png" alt="Excelência Veículos e Financiamentos" width="502" height="248" loading="lazy" decoding="async" class="h-[46px] w-auto md:h-[60px]">
+            <img src="assets/logos/kodautos.png" alt="Kodautos Seminovos" width="422" height="162" loading="lazy" decoding="async" class="h-[46px] w-auto md:h-[60px]">
+          </div>
+          <div class="flex shrink-0 items-center gap-[40px] pr-[40px]" aria-hidden="true">
+            <img src="assets/logos/aguilar.png" alt="" width="455" height="202" loading="lazy" decoding="async" class="h-[46px] w-auto md:h-[60px]">
+            <img src="assets/logos/falcon.png" alt="" width="341" height="314" loading="lazy" decoding="async" class="h-[46px] w-auto md:h-[60px]">
+            <img src="assets/logos/topvel.png" alt="" width="386" height="244" loading="lazy" decoding="async" class="h-[46px] w-auto md:h-[60px]">
+            <img src="assets/logos/excelencia.png" alt="" width="502" height="248" loading="lazy" decoding="async" class="h-[46px] w-auto md:h-[60px]">
+            <img src="assets/logos/kodautos.png" alt="" width="422" height="162" loading="lazy" decoding="async" class="h-[46px] w-auto md:h-[60px]">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAIXAS INCLINADAS ============ -->
+  <div class="relative overflow-hidden bg-ink py-[30px]" aria-hidden="true">
+    <div class="absolute inset-x-0 top-[40px] h-[100px]" style="background: linear-gradient(180deg, rgba(43,75,242,.14), transparent);"></div>
+    <div class="relative">
+      <div class="absolute inset-x-[-10%] top-[20px] rotate-[1.6deg] bg-[#14204F] py-[13px]">
+        <div class="marquee marquee--rev text-[10.4px] font-extrabold uppercase tracking-[.16em] text-[#8FA6DA] md:text-[13px]" style="--dur: 34s">
+          <span class="flex shrink-0 items-center gap-[44px] pr-[44px] whitespace-nowrap">Marketing para loja de seminovos <i class="h-[6px] w-[6px] rounded-full bg-[#8FA6DA]"></i> Marketing para loja de seminovos <i class="h-[6px] w-[6px] rounded-full bg-[#8FA6DA]"></i> Marketing para loja de seminovos <i class="h-[6px] w-[6px] rounded-full bg-[#8FA6DA]"></i></span>
+          <span class="flex shrink-0 items-center gap-[44px] pr-[44px] whitespace-nowrap">Marketing para loja de seminovos <i class="h-[6px] w-[6px] rounded-full bg-[#8FA6DA]"></i> Marketing para loja de seminovos <i class="h-[6px] w-[6px] rounded-full bg-[#8FA6DA]"></i> Marketing para loja de seminovos <i class="h-[6px] w-[6px] rounded-full bg-[#8FA6DA]"></i></span>
+        </div>
+      </div>
+      <div class="relative mx-[-10%] -rotate-[2.2deg] py-[14px] shadow-[0_12px_30px_-10px_rgba(43,75,242,.55)]" style="background: linear-gradient(90deg, #2B5BFF 0%, #3D4FF5 50%, #6A3BF5 100%);">
+        <div class="marquee text-[10.4px] font-extrabold uppercase tracking-[.16em] text-white md:text-[13px]" style="--dur: 30s">
+          <span class="flex shrink-0 items-center gap-[44px] pr-[44px] whitespace-nowrap">Marketing para loja de seminovos <i class="h-[6px] w-[6px] rounded-full bg-white"></i> Marketing para loja de seminovos <i class="h-[6px] w-[6px] rounded-full bg-white"></i> Marketing para loja de seminovos <i class="h-[6px] w-[6px] rounded-full bg-white"></i></span>
+          <span class="flex shrink-0 items-center gap-[44px] pr-[44px] whitespace-nowrap">Marketing para loja de seminovos <i class="h-[6px] w-[6px] rounded-full bg-white"></i> Marketing para loja de seminovos <i class="h-[6px] w-[6px] rounded-full bg-white"></i> Marketing para loja de seminovos <i class="h-[6px] w-[6px] rounded-full bg-white"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ CRIATIVOS ============ -->
+  <section class="relative overflow-hidden bg-ink pt-[72px] md:pt-[90px]">
+    <div class="mx-auto max-w-[1120px] px-[19px] md:px-8">
+      <h2 class="h-section max-w-[330px] text-[#F4F6FF] md:max-w-[640px]">
+        A gente não entrega relatório. Entrega <span class="brush">anúncio rodando.<svg viewBox="0 0 200 10" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="br1" x1="0" x2="1"><stop offset="0" stop-color="#2B6BFF"/><stop offset=".6" stop-color="#8B3BF0"/><stop offset="1" stop-color="#E040A0"/></linearGradient></defs><path d="M2 6.5C50 3 120 2.5 198 5.5" fill="none" stroke="url(#br1)" stroke-width="3.2" stroke-linecap="round"/></svg></span>
+      </h2>
+      <p class="mt-[27px] max-w-[560px] text-[13.6px] font-light leading-[23px] text-[#C1C7DC] md:text-[17px] md:leading-[1.6]">
+        Roteiro, gravação, edição e veiculação. Estes são criativos reais no ar para lojistas clientes da Nexo.
+      </p>
+    </div>
+
+    <div class="fade-y relative mx-auto mt-[40px] h-[453px] max-w-[1120px] overflow-hidden px-[11px] md:h-[560px] md:px-8">
+      <!-- Celular: 2 colunas com 4 vídeos cada -->
+      <div class="grid grid-cols-2 gap-[9px] md:hidden">
+          <div class="reel" style="--dur: 46s; --delay: -8s">
+            <div class="reel-group">
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-1.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-1.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-3.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-3.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-5.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-5.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-7.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-7.mp4" type="video/mp4"></video>
+            </div>
+            <div class="reel-group" aria-hidden="true">
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-1.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-1.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-3.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-3.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-5.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-5.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-7.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-7.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+          <div class="reel reel--down" style="--dur: 40s; --delay: -20s">
+            <div class="reel-group">
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-2.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-2.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-4.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-4.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-6.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-6.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-8.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-8.mp4" type="video/mp4"></video>
+            </div>
+            <div class="reel-group" aria-hidden="true">
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-2.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-2.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-4.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-4.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-6.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-6.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-8.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-8.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+      </div>
+      <!-- Computador: 4 colunas com 2 vídeos cada -->
+      <div class="hidden grid-cols-4 gap-4 md:grid">
+          <div class="reel" style="--dur: 30s; --delay: -6s">
+            <div class="reel-group">
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-1.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-1.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-5.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-5.mp4" type="video/mp4"></video>
+            </div>
+            <div class="reel-group" aria-hidden="true">
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-1.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-1.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-5.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-5.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+          <div class="reel reel--down" style="--dur: 36s; --delay: -14s">
+            <div class="reel-group">
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-2.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-2.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-6.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-6.mp4" type="video/mp4"></video>
+            </div>
+            <div class="reel-group" aria-hidden="true">
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-2.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-2.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-6.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-6.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+          <div class="reel" style="--dur: 32s; --delay: -22s">
+            <div class="reel-group">
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-3.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-3.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-7.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-7.mp4" type="video/mp4"></video>
+            </div>
+            <div class="reel-group" aria-hidden="true">
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-3.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-3.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-7.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-7.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+          <div class="reel reel--down" style="--dur: 38s; --delay: -4s">
+            <div class="reel-group">
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-4.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-4.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-8.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-8.mp4" type="video/mp4"></video>
+            </div>
+            <div class="reel-group" aria-hidden="true">
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-4.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-4.mp4" type="video/mp4"></video>
+              <video data-reel muted playsinline loop preload="none" disablepictureinpicture poster="assets/capas/criativo-8.jpg" width="540" height="960" aria-label="Criativo de anúncio de cliente Nexo" class="aspect-[9/16] w-full rounded-[12px] border border-white/10 bg-ink-800 object-cover"><source src="assets/videos/criativo-8.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DEPOIMENTOS ============ -->
+  <section class="bg-paper pt-[73px] pb-[87px] text-navy md:pt-[100px] md:pb-[110px]">
+    <div class="mx-auto max-w-[1120px] px-[19px] md:px-8">
+      <h2 class="h-section max-w-[400px] md:max-w-[720px]">
+        Os resultados começam quando o marketing deixa de ser um <span class="brush">improviso.<svg viewBox="0 0 200 10" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="br2" x1="0" x2="1"><stop offset="0" stop-color="#2B6BFF"/><stop offset=".6" stop-color="#8B3BF0"/><stop offset="1" stop-color="#E040A0"/></linearGradient></defs><path d="M2 5C60 8 140 1.5 198 6.5" fill="none" stroke="url(#br2)" stroke-width="3.2" stroke-linecap="round"/></svg></span>
+      </h2>
+      <p class="mt-[27px] max-w-[580px] text-[13.6px] font-light leading-[23px] text-slate-soft md:text-[17px] md:leading-[1.6]">
+        Assista aos depoimentos de empresários que passaram a gerar mais demanda qualificada, estruturar o Instagram, organizar o comercial e aumentar o número de vendas por mês.
+      </p>
+    </div>
+
+    <div class="no-scrollbar mx-auto mt-[37px] flex max-w-[1120px] snap-x snap-mandatory gap-[11px] overflow-x-auto scroll-px-[19px] px-[19px] pb-[16px] md:gap-5 md:scroll-px-8 md:px-8">
+      <div class="testimonial flex aspect-[9/16] w-[304px] shrink-0 snap-start items-center justify-center rounded-[19px] md:w-[300px] lg:w-[calc((100%-60px)/4)] md:rounded-[20px]"><span class="-mt-[30px] text-[13px] font-semibold text-[#9AAAE0] md:text-[14px]">Carregando depoimento</span></div>
+      <div class="testimonial flex aspect-[9/16] w-[304px] shrink-0 snap-start items-center justify-center rounded-[19px] md:w-[300px] lg:w-[calc((100%-60px)/4)] md:rounded-[20px]"><span class="-mt-[30px] text-[13px] font-semibold text-[#9AAAE0] md:text-[14px]">Carregando depoimento</span></div>
+      <div class="testimonial flex aspect-[9/16] w-[304px] shrink-0 snap-start items-center justify-center rounded-[19px] md:w-[300px] lg:w-[calc((100%-60px)/4)] md:rounded-[20px]"><span class="-mt-[30px] text-[13px] font-semibold text-[#9AAAE0] md:text-[14px]">Carregando depoimento</span></div>
+      <div class="testimonial flex aspect-[9/16] w-[304px] shrink-0 snap-start items-center justify-center rounded-[19px] md:w-[300px] lg:w-[calc((100%-60px)/4)] md:rounded-[20px]"><span class="-mt-[30px] text-[13px] font-semibold text-[#9AAAE0] md:text-[14px]">Carregando depoimento</span></div>
+    </div>
+  </section>
+
+  <!-- ============ FUNDADOR + NÚMEROS ============ -->
+  <section class="relative overflow-hidden bg-ink pt-[71px] md:pt-[100px]">
+    <div class="pointer-events-none absolute inset-x-0 top-[380px] h-[480px]" style="background: radial-gradient(60% 50% at 50% 50%, rgba(30,60,170,.35), transparent 70%);" aria-hidden="true"></div>
+    <div class="relative mx-auto max-w-[1120px] px-[19px] md:px-8">
+      <div class="relative overflow-hidden rounded-[28px] border border-white/10 md:mx-auto md:max-w-[560px]">
+        <img src="https://placehold.co/920x1145/2a3a7a/7a86b8?text=Foto" alt="Especialista Nexo" width="920" height="1145" loading="lazy" class="aspect-[410/511] w-full object-cover">
+        <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(40,60,160,.12) 0%, transparent 40%, rgba(5,10,28,.35) 100%);"></div>
+      </div>
+
+      <div class="mt-[41px] md:mt-[80px]">
+        <span class="eyebrow">Números da Nexo</span>
+        <h2 class="h-section mt-[22px] max-w-[340px] text-[#F4F6FF] md:max-w-[640px]">Mais de R$ 50 milhões gerados em contratos para loja de seminovos</h2>
+      </div>
+
+      <dl class="mt-[35px] grid grid-cols-2 border-b border-white/[.12] lg:grid-cols-4">
+        <div class="relative border-r border-white/10 px-[13px] pt-[22px] pb-[26px] md:px-6 md:pt-7 md:pb-8">
+          <span class="absolute inset-x-0 top-0 h-[2px]" style="background: linear-gradient(90deg, #3F8CFF, rgba(63,140,255,.15));"></span>
+          <dt class="grad-num flex flex-wrap items-baseline gap-x-[6px] gap-y-[4px] text-[37px] font-extrabold leading-none md:text-[44px]">+30<small class="text-[13px] leading-[1.15] text-[#8C9BC8] md:text-[15px]">carros por mês</small></dt>
+          <dd class="mt-[19px] text-[11.8px] font-light leading-[17.3px] text-[#B5BCD4] md:text-[15px] md:leading-[1.45]">na Top Vel</dd>
+        </div>
+        <div class="relative px-[13px] pt-[22px] pb-[26px] md:px-6 md:pt-7 md:pb-8 lg:border-r lg:border-white/10">
+          <span class="absolute inset-x-0 top-0 h-[2px]" style="background: linear-gradient(90deg, #3F8CFF, rgba(63,140,255,.15));"></span>
+          <dt class="grad-num flex flex-wrap items-baseline gap-x-[6px] gap-y-[4px] text-[37px] font-extrabold leading-none md:text-[44px]"><small class="text-[13px] leading-[1.15] text-[#8C9BC8] md:text-[15px]">+ de</small>1<small class="text-[13px] leading-[1.15] text-[#8C9BC8] md:text-[15px]">carro por dia</small></dt>
+          <dd class="mt-[19px] text-[11.8px] font-light leading-[17.3px] text-[#B5BCD4] md:text-[15px] md:leading-[1.45]">vendido pela Falcon Veículos (46 por mês)</dd>
+        </div>
+        <div class="relative border-r border-white/10 px-[13px] pt-[22px] pb-[26px] md:px-6 md:pt-7 md:pb-8">
+          <span class="absolute inset-x-0 top-0 h-[2px]" style="background: linear-gradient(90deg, #3F8CFF, rgba(63,140,255,.15));"></span>
+          <dt class="grad-num flex flex-wrap items-baseline gap-x-[6px] gap-y-[4px] text-[37px] font-extrabold leading-none md:text-[44px]">7<small class="text-[13px] leading-[1.15] text-[#8C9BC8] md:text-[15px]">dias</small></dt>
+          <dd class="mt-[19px] text-[11.8px] font-light leading-[17.3px] text-[#B5BCD4] md:text-[15px] md:leading-[1.45]">para o volume de leads subir depois que a campanha entra no ar</dd>
+        </div>
+        <div class="relative px-[13px] pt-[22px] pb-[26px] md:px-6 md:pt-7 md:pb-8">
+          <span class="absolute inset-x-0 top-0 h-[2px]" style="background: linear-gradient(90deg, #3F8CFF, rgba(63,140,255,.15));"></span>
+          <dt class="grad-num flex flex-wrap items-baseline gap-x-[6px] gap-y-[4px] text-[37px] font-extrabold leading-none md:text-[44px]">4<small class="text-[13px] leading-[1.15] text-[#8C9BC8] md:text-[15px]">dias</small></dt>
+          <dd class="mt-[19px] text-[11.8px] font-light leading-[17.3px] text-[#B5BCD4] md:text-[15px] md:leading-[1.45]">para as primeiras vendas vindas do anúncio, conforme estoque e atendimento</dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="mt-[26px] h-[47px] overflow-hidden md:mt-10 md:h-[80px]" aria-hidden="true">
+      <div class="marquee outline-text text-[63px] font-extrabold uppercase leading-none md:text-[110px]" style="--dur: 40s">
+        <span class="shrink-0 whitespace-nowrap pr-[40px]">Contratos · Contratos · Contratos · Contratos ·</span>
+        <span class="shrink-0 whitespace-nowrap pr-[40px]">Contratos · Contratos · Contratos · Contratos ·</span>
+      </div>
+    </div>
+    <div class="h-[78px] md:h-[100px]"></div>
+  </section>
+
+  <!-- ============ O MÉTODO ============ -->
+  <section class="relative overflow-hidden bg-[#070C22] pb-[70px] md:pb-[110px]">
+    <div class="absolute inset-0" aria-hidden="true">
+      <img src="https://placehold.co/1080x900/1a2350/1a2350" alt="" width="1080" height="900" loading="lazy" class="h-[700px] w-full object-cover opacity-80 md:h-[760px]">
+      <div class="absolute inset-0" style="background: linear-gradient(115deg, rgba(160,180,255,.18) 0%, transparent 22%), linear-gradient(245deg, rgba(150,90,230,.22) 0%, transparent 25%), linear-gradient(180deg, rgba(5,10,28,.55) 0%, rgba(8,14,40,.75) 40%, #080F2A 70%, #070C22 100%);"></div>
+      <div class="absolute inset-x-0 top-[300px] h-[380px]" style="background: radial-gradient(55% 45% at 30% 50%, rgba(43,91,242,.28), transparent 70%);"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-[1120px] px-[19px] pt-[6px] md:px-8 md:pt-[90px]">
+      <span class="eyebrow">O método Nexo</span>
+      <h2 class="h-section mt-[22px] text-[#F4F6FF] md:max-w-[760px]">Estruturamos o marketing da sua loja para transformar estoque em vendas</h2>
+      <p class="mt-[27px] max-w-[560px] text-[13.6px] font-light leading-[23px] text-[#C1C7DC] md:text-[17px] md:leading-[1.6]">Uma metodologia que conecta sua loja a compradores e prepara seu comercial para vender mais.</p>
+
+      <a href="#form" class="btn-cta mt-[34px] h-[50px] w-[285px] text-[12.4px] tracking-[.08em] md:h-[56px] md:w-[330px] md:text-[14px]">
+        Quero mais informações
+        <svg class="h-[15px] w-[15px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+
+      <div class="mt-[28px] grid gap-[20px] md:mt-12 md:grid-cols-2 md:gap-6">
+        <article class="method-card rounded-[26px] p-[22px] pb-[27px] md:p-8">
+          <div class="flex items-center justify-between">
+            <span class="text-[11.5px] font-extrabold tracking-[.18em] text-[#4C9BFF] md:text-[12px]">01</span>
+            <span class="icon-tile grid h-[46px] w-[46px] place-items-center rounded-[14px] md:h-[52px] md:w-[52px]"><svg class="h-[19px] w-[19px] text-white md:h-[22px] md:w-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></span>
+          </div>
+          <h3 class="mt-[25px] max-w-[300px] text-[16.5px] font-extrabold leading-[20.5px] text-white md:max-w-none md:text-[20px] md:leading-[1.25]">Anúncios on-line direcionados para quem está procurando o seu próximo carro</h3>
+          <p class="mt-[11px] text-[13.4px] font-light leading-[21px] text-[#A9B3D3] md:text-[15px] md:leading-[1.55]">Colocamos seu estoque na frente de potenciais compradores da sua região.</p>
+        </article>
+        <article class="method-card rounded-[26px] p-[22px] pb-[27px] md:p-8">
+          <div class="flex items-center justify-between">
+            <span class="text-[11.5px] font-extrabold tracking-[.18em] text-[#4C9BFF] md:text-[12px]">02</span>
+            <span class="icon-tile grid h-[46px] w-[46px] place-items-center rounded-[14px] md:h-[52px] md:w-[52px]"><svg class="h-[19px] w-[19px] text-white md:h-[22px] md:w-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 4.5h17l-6.5 8v6l-4 2v-8Z"/></svg></span>
+          </div>
+          <h3 class="mt-[25px] text-[16.5px] font-extrabold leading-[20.5px] text-white md:text-[20px] md:leading-[1.25]">Geração de demanda qualificada</h3>
+          <p class="mt-[11px] text-[13.4px] font-light leading-[21px] text-[#A9B3D3] md:text-[15px] md:leading-[1.55]">Atraia interessados nos seus veículos para o seu time comercial atender, negociar e agendar visitas.</p>
+        </article>
+        <article class="method-card rounded-[26px] p-[22px] pb-[27px] md:p-8">
+          <div class="flex items-center justify-between">
+            <span class="text-[11.5px] font-extrabold tracking-[.18em] text-[#4C9BFF] md:text-[12px]">03</span>
+            <span class="icon-tile grid h-[46px] w-[46px] place-items-center rounded-[14px] md:h-[52px] md:w-[52px]"><svg class="h-[19px] w-[19px] text-white md:h-[22px] md:w-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r=".6" fill="currentColor"/></svg></span>
+          </div>
+          <h3 class="mt-[25px] text-[16.5px] font-extrabold leading-[20.5px] text-white md:text-[20px] md:leading-[1.25]">Instagram que desperta desejo</h3>
+          <p class="mt-[11px] text-[13.4px] font-light leading-[21px] text-[#A9B3D3] md:text-[15px] md:leading-[1.55]">Organizamos seu perfil e orientamos seus vídeos para valorizar o estoque e gerar conversas no WhatsApp.</p>
+        </article>
+        <article class="method-card rounded-[26px] p-[22px] pb-[27px] md:p-8">
+          <div class="flex items-center justify-between">
+            <span class="text-[11.5px] font-extrabold tracking-[.18em] text-[#4C9BFF] md:text-[12px]">04</span>
+            <span class="icon-tile grid h-[46px] w-[46px] place-items-center rounded-[14px] md:h-[52px] md:w-[52px]"><svg class="h-[19px] w-[19px] text-white md:h-[22px] md:w-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="7" r="3.5"/><path d="M3.5 20c0-3.6 2.9-6.5 6.5-6.5M18 21v-7M15 17l3-3 3 3"/></svg></span>
+          </div>
+          <h3 class="mt-[25px] text-[16.5px] font-extrabold leading-[20.5px] text-white md:text-[20px] md:leading-[1.25]">Acompanhamento comercial</h3>
+          <p class="mt-[11px] text-[13.4px] font-light leading-[21px] text-[#A9B3D3] md:text-[15px] md:leading-[1.55]">Melhore o atendimento e recupere oportunidades para vender mais com os contatos que já chegaram.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ O QUE FAZEMOS ============ -->
+  <section class="bg-ink-900 pt-[85px] pb-[72px] md:pt-[110px] md:pb-[110px]">
+    <div class="mx-auto max-w-[1120px] px-[19px] md:px-8">
+      <div class="text-center">
+        <span class="eyebrow">O que fazemos?</span>
+        <h2 class="h-section mx-auto mt-[22px] max-w-[400px] text-[#F4F6FF] md:max-w-[760px]">Estruturamos o marketing da sua loja de seminovos com base no que você precisa</h2>
+        <p class="mx-auto mt-[27px] max-w-[400px] text-[13.6px] font-light leading-[23px] text-[#C1C7DC] md:max-w-[600px] md:text-[17px] md:leading-[1.6]">Unimos estratégia, tecnologia e execução para atrair compradores, movimentar seu estoque e transformar oportunidades em vendas.</p>
+      </div>
+
+      <ul class="mt-[46px] grid border-t border-white/10 lg:grid-cols-2 lg:gap-x-12">
+        <li class="flex items-center gap-[17px] border-b border-white/10 py-[23px] md:gap-6 md:py-8">
+          <img src="assets/icones/criativos.jpg" alt="" width="256" height="192" loading="lazy" decoding="async" class="bg-black object-cover h-[64px] w-[85px] shrink-0 rounded-[12px] md:h-[84px] md:w-[112px] md:rounded-[14px]">
+          <div>
+            <h3 class="text-[15px] font-extrabold uppercase leading-[19px] tracking-[.02em] text-white md:text-[17px]">Criativos de alta conversão</h3>
+            <p class="mt-[7px] text-[13.4px] font-light leading-[20.5px] text-[#B5BCD4] md:text-[15px] md:leading-[1.55]">Criamos vídeos e peças publicitárias desenvolvidos para valorizar seus veículos, despertar o interesse de compradores e gerar mais oportunidades de venda para sua loja.</p>
+          </div>
+        </li>
+        <li class="flex items-center gap-[17px] border-b border-white/10 py-[23px] md:gap-6 md:py-8">
+          <img src="assets/icones/inteligencia.jpg" alt="" width="256" height="192" loading="lazy" decoding="async" class="bg-black object-cover h-[64px] w-[85px] shrink-0 rounded-[12px] md:h-[84px] md:w-[112px] md:rounded-[14px]">
+          <div>
+            <h3 class="text-[15px] font-extrabold uppercase leading-[19px] tracking-[.02em] text-white md:text-[17px]">Inteligência e performance</h3>
+            <p class="mt-[7px] text-[13.4px] font-light leading-[20.5px] text-[#B5BCD4] md:text-[15px] md:leading-[1.55]">Acompanhamos indicadores, analisamos resultados e realizamos reuniões estratégicas para otimizar campanhas, reduzir desperdícios e aumentar as oportunidades de venda.</p>
+          </div>
+        </li>
+        <li class="flex items-center gap-[17px] border-b border-white/10 py-[23px] md:gap-6 md:py-8">
+          <img src="assets/icones/sites.jpg" alt="" width="256" height="192" loading="lazy" decoding="async" class="bg-black object-cover h-[64px] w-[85px] shrink-0 rounded-[12px] md:h-[84px] md:w-[112px] md:rounded-[14px]">
+          <div>
+            <h3 class="text-[15px] font-extrabold uppercase leading-[19px] tracking-[.02em] text-white md:text-[17px]">Sites que vendem seminovos</h3>
+            <p class="mt-[7px] text-[13.4px] font-light leading-[20.5px] text-[#B5BCD4] md:text-[15px] md:leading-[1.55]">Desenvolvemos landing pages e sites preparados para apresentar seu estoque e transformar visitantes em interessados nos seus veículos, integrados ao seu processo comercial.</p>
+          </div>
+        </li>
+        <li class="flex items-center gap-[17px] border-b border-white/10 py-[23px] md:gap-6 md:py-8">
+          <img src="assets/icones/automacao.jpg" alt="" width="256" height="192" loading="lazy" decoding="async" class="bg-black object-cover h-[64px] w-[85px] shrink-0 rounded-[12px] md:h-[84px] md:w-[112px] md:rounded-[14px]">
+          <div>
+            <h3 class="text-[15px] font-extrabold uppercase leading-[19px] tracking-[.02em] text-white md:text-[17px]">Automação comercial</h3>
+            <p class="mt-[7px] text-[13.4px] font-light leading-[20.5px] text-[#B5BCD4] md:text-[15px] md:leading-[1.55]">Automatizamos mensagens, follow-ups e reativações de interessados para manter as negociações em andamento, recuperar oportunidades e aumentar as chances de fechamento.</p>
+          </div>
+        </li>
+        <li class="flex items-center gap-[17px] border-b border-white/10 py-[23px] md:gap-6 md:py-8">
+          <img src="assets/icones/demanda.jpg" alt="" width="256" height="192" loading="lazy" decoding="async" class="bg-black object-cover h-[64px] w-[85px] shrink-0 rounded-[12px] md:h-[84px] md:w-[112px] md:rounded-[14px]">
+          <div>
+            <h3 class="text-[15px] font-extrabold uppercase leading-[19px] tracking-[.02em] text-white md:text-[17px]">Geração de demanda</h3>
+            <p class="mt-[7px] text-[13.4px] font-light leading-[20.5px] text-[#B5BCD4] md:text-[15px] md:leading-[1.55]">Gerenciamos campanhas de mídia paga para colocar seu estoque na frente de potenciais compradores que estão procurando um seminovo na sua região.</p>
+          </div>
+        </li>
+        <li class="flex items-center gap-[17px] border-b border-white/10 py-[23px] md:gap-6 md:py-8">
+          <img src="assets/icones/consultoria.jpg" alt="" width="256" height="192" loading="lazy" decoding="async" class="bg-black object-cover h-[64px] w-[85px] shrink-0 rounded-[12px] md:h-[84px] md:w-[112px] md:rounded-[14px]">
+          <div>
+            <h3 class="text-[15px] font-extrabold uppercase leading-[19px] tracking-[.02em] text-white md:text-[17px]">Consultoria e gestão</h3>
+            <p class="mt-[7px] text-[13.4px] font-light leading-[20.5px] text-[#B5BCD4] md:text-[15px] md:leading-[1.55]">Nossa equipe acompanha sua operação de perto, ajustando estratégias e identificando oportunidades para melhorar o atendimento, aumentar as visitas e vender mais carros.</p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="mt-[36px] text-center md:mt-14">
+        <a href="#form" class="btn-cta h-[50px] w-[285px] text-[12.4px] tracking-[.08em] md:h-[56px] md:w-[330px] md:text-[14px]">
+          Quero mais informações
+          <svg class="h-[15px] w-[15px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PLANOS PERSONALIZADOS ============ -->
+  <section class="bg-paper pt-[82px] pb-[64px] text-navy md:pt-[110px] md:pb-[100px]">
+    <div class="mx-auto max-w-[1120px] px-[19px] md:px-8">
+      <span class="eyebrow eyebrow--light">Planos personalizados</span>
+      <h2 class="h-section mt-[22px] max-w-[280px] md:max-w-[560px]">Nossa assessoria foi criada para lojas de seminovos que…</h2>
+      <p class="mt-[27px] max-w-[580px] text-[13.6px] font-light leading-[23px] text-slate-soft md:text-[17px] md:leading-[1.6]">Querem movimentar o estoque, vender mais todos os meses e transformar carros parados em novas oportunidades de negócio.</p>
+
+      <ul class="mt-[41px] border-t border-navy/10 md:max-w-[820px]">
+        <li class="flex gap-[16px] border-b border-navy/10 py-[20px] md:gap-6 md:py-7">
+          <span class="check-tile grid h-[39px] w-[39px] shrink-0 place-items-center rounded-[10px] md:h-[44px] md:w-[44px] md:rounded-[11px]"><svg class="h-[16px] w-[16px] text-white md:h-[18px] md:w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>
+          <div>
+            <h3 class="text-[16.5px] font-extrabold leading-[21px] md:text-[20px] md:leading-[1.3]">Precisam gerar mais demanda</h3>
+            <p class="mt-[6px] text-[13.4px] font-light leading-[20.5px] text-slate-soft md:text-[15px] md:leading-[1.55]">Colocamos seus veículos na frente de potenciais compradores e criamos oportunidades para seu time comercial negociar.</p>
+          </div>
+        </li>
+        <li class="flex gap-[16px] border-b border-navy/10 py-[20px] md:gap-6 md:py-7">
+          <span class="check-tile grid h-[39px] w-[39px] shrink-0 place-items-center rounded-[10px] md:h-[44px] md:w-[44px] md:rounded-[11px]"><svg class="h-[16px] w-[16px] text-white md:h-[18px] md:w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>
+          <div>
+            <h3 class="text-[16.5px] font-extrabold leading-[21px] md:text-[20px] md:leading-[1.3]">Querem aumentar o giro do estoque</h3>
+            <p class="mt-[6px] text-[13.4px] font-light leading-[20.5px] text-slate-soft md:text-[15px] md:leading-[1.55]">Venda os carros que estão há mais tempo no pátio e abra espaço para novas compras, sem depender apenas de indicações.</p>
+          </div>
+        </li>
+        <li class="flex gap-[16px] border-b border-navy/10 py-[20px] md:gap-6 md:py-7">
+          <span class="check-tile grid h-[39px] w-[39px] shrink-0 place-items-center rounded-[10px] md:h-[44px] md:w-[44px] md:rounded-[11px]"><svg class="h-[16px] w-[16px] text-white md:h-[18px] md:w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>
+          <div>
+            <h3 class="text-[16.5px] font-extrabold leading-[21px] md:text-[20px] md:leading-[1.3]">Buscam crescer de forma previsível</h3>
+            <p class="mt-[6px] text-[13.4px] font-light leading-[20.5px] text-slate-soft md:text-[15px] md:leading-[1.55]">Integramos marketing e comercial para atrair compradores, agendar mais visitas e aumentar o volume de vendas da sua loja.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ AVISO ============ -->
+  <section id="aviso" class="relative overflow-hidden bg-ink py-[72px] md:py-[110px]">
+    <div class="pointer-events-none absolute inset-0" style="background: radial-gradient(45% 40% at 12% 18%, rgba(40,70,220,.42), transparent 70%), radial-gradient(35% 45% at 100% 55%, rgba(110,50,190,.32), transparent 70%), radial-gradient(35% 30% at 45% 100%, rgba(40,90,200,.28), transparent 70%);" aria-hidden="true"></div>
+
+    <div class="relative mx-auto grid max-w-[1200px] gap-[44px] px-[19px] md:px-8 lg:grid-cols-[minmax(0,1fr)_480px] lg:items-center lg:gap-[88px]">
+      <div>
+        <span class="inline-flex h-[29px] items-center rounded-full px-[16px] text-[10px] font-extrabold uppercase tracking-[.22em] text-white shadow-[0_8px_22px_-6px_rgba(59,110,255,.7)] md:h-[32px] md:px-5 md:text-[11px]" style="background: linear-gradient(90deg, #4A9BFF, #2B5BF2);">Aviso</span>
+
+        <h2 class="mt-[22px] text-[40px] font-light leading-[1.1] tracking-[-.02em] text-[#F4F6FF] md:text-[53px]">
+          <strong class="font-extrabold">Não saia agora!</strong><br>
+          Faltam poucos segundos para <strong class="font-extrabold">sua loja de seminovos vender mais</strong>
+        </h2>
+
+        <ol class="mt-[34px] border-t border-white/10 md:mt-12">
+        <li class="flex gap-[17px] border-b border-white/10 py-[22px] md:gap-6 md:py-7">
+          <span class="grid h-[40px] w-[40px] shrink-0 place-items-center rounded-[10px] border border-[#3D63D6]/45 bg-[#0F1A45]/70 text-[15px] font-extrabold text-[#5AA2FF] shadow-[0_1px_0_rgba(255,255,255,.06)_inset] md:h-[46px] md:w-[46px] md:text-[17px]">1</span>
+          <div>
+            <h3 class="text-[16px] font-extrabold leading-[21px] text-white md:text-[19px] md:leading-[1.3]">Complete o formulário</h3>
+            <p class="mt-[7px] text-[13.6px] font-light leading-[21px] text-[#B5BCD4] md:text-[16px] md:leading-[1.6]">Forneça suas informações no formulário ao lado. Garantimos a segurança total de seus dados. Serão usados apenas para contato.</p>
+          </div>
+        </li>
+        <li class="flex gap-[17px] border-b border-white/10 py-[22px] md:gap-6 md:py-7">
+          <span class="grid h-[40px] w-[40px] shrink-0 place-items-center rounded-[10px] border border-[#3D63D6]/45 bg-[#0F1A45]/70 text-[15px] font-extrabold text-[#5AA2FF] shadow-[0_1px_0_rgba(255,255,255,.06)_inset] md:h-[46px] md:w-[46px] md:text-[17px]">2</span>
+          <div>
+            <h3 class="text-[16px] font-extrabold leading-[21px] text-white md:text-[19px] md:leading-[1.3]">Receba uma ligação personalizada</h3>
+            <p class="mt-[7px] text-[13.6px] font-light leading-[21px] text-[#B5BCD4] md:text-[16px] md:leading-[1.6]">Em um prazo de até 5 minutos em horário comercial, um dos nossos especialistas entrará em contato diretamente para agendar a reunião mais importante com você.</p>
+          </div>
+        </li>
+        </ol>
+      </div>
+
+      <div class="relative rounded-[24px] border border-[#6A82D8]/25 p-[21px] pb-[27px] shadow-[0_30px_60px_-30px_rgba(0,0,0,.8)] md:p-8" style="background: linear-gradient(170deg, rgba(22,32,82,.92) 0%, rgba(12,20,56,.94) 50%, rgba(8,13,38,.96) 100%);">
+        <span class="pointer-events-none absolute -left-px top-[30%] h-[60%] w-px" style="background: linear-gradient(180deg, rgba(200,70,140,0), rgba(200,70,140,.7) 30%, rgba(110,160,255,.9) 80%, rgba(110,160,255,0));" aria-hidden="true"></span>
+        <span class="pointer-events-none absolute -bottom-px left-[20px] h-px w-[40%]" style="background: linear-gradient(90deg, rgba(110,160,255,.8), rgba(110,160,255,0));" aria-hidden="true"></span>
+
+        <form class="lead-form space-y-[9px] md:space-y-3" novalidate>
+          <label class="field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            <span class="sr-only">Seu nome</span>
+            <input type="text" name="nome" placeholder="Seu nome" autocomplete="name" required minlength="2">
+          </label>
+          <label class="field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>
+            <span class="sr-only">Seu melhor e-mail</span>
+            <input type="email" name="email" placeholder="Seu melhor e-mail" autocomplete="email" inputmode="email" required>
+          </label>
+          <label class="field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r=".6" fill="currentColor"/></svg>
+            <span class="sr-only">Nome da sua empresa no Instagram</span>
+            <input type="text" name="instagram" placeholder="Nome da sua empresa no Instagram" autocomplete="off" autocapitalize="off" required>
+          </label>
+          <label class="field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3.5l1.8 4.5-2.3 1.4a11 11 0 0 0 6.1 6.1l1.4-2.3L20 15.5V19a1.5 1.5 0 0 1-1.6 1.5C10.6 20 4 13.4 3.5 5.6A1.5 1.5 0 0 1 5 4Z"/></svg>
+            <span class="sr-only">WhatsApp com DDD</span>
+            <span class="pointer-events-none absolute left-[38px] flex items-center gap-[8px] text-[13px] font-bold text-white" aria-hidden="true">
+              <svg class="h-[12px] w-[17px] rounded-[2px]" viewBox="0 0 20 14"><rect width="20" height="14" fill="#1FA34A"/><path d="M10 2 18 7 10 12 2 7Z" fill="#FFD43B"/><circle cx="10" cy="7" r="2.7" fill="#1F4AA8"/></svg>
+              +55
+              <span class="ml-[2px] h-[16px] w-px bg-white/20"></span>
+            </span>
+            <input type="tel" name="whatsapp" placeholder="WhatsApp com DDD" autocomplete="tel-national" inputmode="numeric" required class="!pl-[94px]">
+          </label>
+
+          <p class="pt-[5px] text-[11.2px] font-bold text-[#E4E8F5] md:text-[13px]">Quantos carros você vende por mês?</p>
+          <label class="field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v16h16"/><path d="m7 15 4-4 3 3 5-6"/></svg>
+            <span class="sr-only">Carros vendidos por mês</span>
+            <select name="carros_mes" required>
+              <option value="" disabled selected>Selecione a quantidade</option>
+              <option>0 a 8</option>
+              <option>8 a 15</option>
+              <option>15 a 20</option>
+              <option>20 a 30</option>
+              <option>30 a 40</option>
+              <option>Acima de 40</option>
+            </select>
+            <svg class="!left-auto right-[16px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </label>
+
+          <div class="pt-[3px]">
+            <button type="submit" class="btn-cta h-[49px] w-full text-[11.7px] tracking-[.02em] md:h-[54px] md:text-[14px]">
+              <span data-label>Receber mais informações</span>
+              <svg class="h-[15px] w-[15px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+
+          <p data-status class="hidden" role="status" aria-live="polite"></p>
+
+          <p class="flex gap-[10px] pt-[6px] text-[10.4px] leading-[16.4px] text-[#8C95B8] md:text-[13px] md:leading-[1.4]">
+            <svg class="mt-[1px] h-[13px] w-[13px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+            Garantimos a segurança total de seus dados. Serão usados apenas para contato.
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="border-t border-white/[.06] bg-ink py-[28px] text-center text-[11.5px] text-[#8C95B8] md:text-[13px]">
+  © <span id="year">2026</span> Nexo. Todos os direitos reservados.
+</footer>
+
+<script>
+  // Endpoint do formulário (webhook/CRM). Deixe vazio para apenas simular o envio.
+  const FORM_ENDPOINT = '';
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Criativos: cada vídeo só baixa e toca enquanto aparece na tela.
+  // Com economia de dados ou movimento reduzido, ficam só as capas.
+  const reelVideos = document.querySelectorAll('video[data-reel]');
+  const calm = navigator.connection?.saveData || matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!calm && 'IntersectionObserver' in window) {
+    const reelObserver = new IntersectionObserver((entries) => {
+      entries.forEach(({ target: video, isIntersecting }) => {
+        if (isIntersecting) {
+          video.preload = 'auto';
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { rootMargin: '150px 0px' });
+    reelVideos.forEach((video) => reelObserver.observe(video));
+  }
+
+  const maskPhone = (input) => {
+    const d = input.value.replace(/\D/g, '').slice(0, 11);
+    let v = d;
+    if (d.length > 2) v = `(${d.slice(0, 2)}) ${d.slice(2)}`;
+    if (d.length > 6) v = `(${d.slice(0, 2)}) ${d.slice(2, d.length - 4)}-${d.slice(-4)}`;
+    input.value = v;
+  };
+
+  const isValid = (el) => {
+    if (el.name === 'whatsapp') return el.value.replace(/\D/g, '').length >= 10;
+    return el.checkValidity();
+  };
+
+  const clearInvalid = (e) => e.target.closest('.field')?.classList.remove('is-invalid');
+
+  document.querySelectorAll('.lead-form').forEach((form) => {
+    const status = form.querySelector('[data-status]');
+    const phone = form.elements.whatsapp;
+
+    const showStatus = (msg, ok) => {
+      status.textContent = msg;
+      status.className = `rounded-[12px] px-3 py-2 text-[12.5px] font-semibold ${ok ? 'bg-[#1E8E5A]/20 text-[#7EE2B0]' : 'bg-[#FF6E8C]/15 text-[#FF9FB3]'}`;
+    };
+
+    phone.addEventListener('input', () => maskPhone(phone));
+    form.addEventListener('input', clearInvalid);
+    form.addEventListener('change', clearInvalid);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fields = [...form.querySelectorAll('input, select')];
+      const invalid = fields.filter((el) => !isValid(el));
+      fields.forEach((el) => el.closest('.field').classList.toggle('is-invalid', invalid.includes(el)));
+      if (invalid.length) {
+        showStatus('Preencha todos os campos corretamente.', false);
+        invalid[0].focus();
+        return;
+      }
+
+      const btn = form.querySelector('button[type="submit"]');
+      const label = btn.querySelector('[data-label]');
+      btn.disabled = true;
+      label.textContent = 'Enviando...';
+
+      const data = Object.fromEntries(new FormData(form));
+      data.whatsapp = '+55' + data.whatsapp.replace(/\D/g, '');
+      data.pagina = location.href;
+      data.origem = form.closest('#aviso') ? 'aviso' : 'topo';
+
+      try {
+        if (FORM_ENDPOINT) {
+          const res = await fetch(FORM_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+          if (!res.ok) throw new Error(res.status);
+        }
+        form.reset();
+        showStatus('Recebemos seus dados! Um especialista entrará em contato em breve.', true);
+      } catch {
+        showStatus('Não foi possível enviar agora. Tente novamente em instantes.', false);
+      } finally {
+        btn.disabled = false;
+        label.textContent = 'Receber mais informações';
+      }
+    });
+  });
+</script>
+</body>
+</html>
