@@ -121,7 +121,7 @@
       pixelDominios: ['lpnexo.com.br', 'www.lpnexo.com.br'], // Pixel só dispara no site oficial (testes não sujam o Pixel)
       whatsappNumero: '5577981259887',  // DDI + DDD + número, só dígitos
       whatsappMensagem: 'Olá! Acabei de preencher o formulário da Nexo.', // Mensagem pronta do botão "Falar no WhatsApp"
-      turnstileSiteKey: '',   // Chave pública (site key) do widget Turnstile
+      turnstileSiteKey: '0x4AAAAAAFmCOU52nIcNM-xW', // Chave pública (site key) do widget Turnstile
     };
     if (NEXO.metaPixelId && NEXO.pixelDominios.includes(location.hostname)) {
       !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -693,6 +693,7 @@
 
 <footer class="border-t border-white/[.06] bg-ink py-[28px] text-center text-[11.5px] text-[#8C95B8] md:text-[13px]">
   © <span id="year">2026</span> Nexo. Todos os direitos reservados.
+  · <a href="/privacidade" class="underline decoration-white/20 underline-offset-2 hover:text-white focus-visible:text-white focus-visible:outline-none active:opacity-70">Política de Privacidade</a>
 </footer>
 
 <script>

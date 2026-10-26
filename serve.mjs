@@ -36,7 +36,10 @@ createServer(async (req, res) => {
       res.writeHead(403).end('Forbidden');
       return;
     }
-    if ((await stat(file).catch(() => null))?.isDirectory()) file = join(file, 'index.html');
+    const info = await stat(file).catch(() => null);
+    if (info?.isDirectory()) file = join(file, 'index.html');
+    // /privacidade -> privacidade.html (igual ao Cloudflare Pages)
+    else if (!info && !extname(file)) file += '.html';
     const body = await readFile(file);
     const headers = {
       'Content-Type': MIME[extname(file).toLowerCase()] || 'application/octet-stream',
