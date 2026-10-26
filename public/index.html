@@ -117,12 +117,13 @@
   <script>
     // Configuração da LP. Nada aqui é segredo: são valores públicos.
     window.NEXO = {
-      metaPixelId: '',        // ID do Pixel da Meta (só números). Vazio = Pixel desligado.
-      whatsappNumero: '',     // DDI + DDD + número, só dígitos. Ex.: 5511999999999
-      whatsappMensagem: '',   // Mensagem pronta do botão "Falar no WhatsApp"
+      metaPixelId: '944996835334662',   // ID do Pixel da Meta (só números). Vazio = Pixel desligado.
+      pixelDominios: ['lpnexo.com.br', 'www.lpnexo.com.br'], // Pixel só dispara no site oficial (testes não sujam o Pixel)
+      whatsappNumero: '5577981259887',  // DDI + DDD + número, só dígitos
+      whatsappMensagem: 'Olá! Acabei de preencher o formulário da Nexo.', // Mensagem pronta do botão "Falar no WhatsApp"
       turnstileSiteKey: '',   // Chave pública (site key) do widget Turnstile
     };
-    if (NEXO.metaPixelId) {
+    if (NEXO.metaPixelId && NEXO.pixelDominios.includes(location.hostname)) {
       !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
       n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
       n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;

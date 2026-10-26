@@ -49,7 +49,8 @@ const abrir = async (url) => {
 
 const preencherEEnviar = async ({ nome, carros, whatsappTeste }) => {
   await avaliar(`(() => {
-    ${whatsappTeste ? `NEXO.whatsappNumero = '5500000000000'; NEXO.whatsappMensagem = 'Mensagem de teste';` : ''}
+    window.__pixelCarregado = typeof window.fbq === 'function';
+    window.__fbq = []; window.fbq = (...args) => window.__fbq.push(args); // registra chamadas sem enviar nada à Meta
     window.__abriuSozinho = false; window.open = () => { window.__abriuSozinho = true; };
     const f = document.querySelector('.lead-form');
     const set = (n, v) => { f.elements[n].value = v; f.elements[n].dispatchEvent(new Event('input', { bubbles: true })); };
@@ -65,8 +66,8 @@ const preencherEEnviar = async ({ nome, carros, whatsappTeste }) => {
       const card = document.querySelector('.lead-form').parentElement;
       const painel = card.querySelector('[role=status]:not([data-status])');
       const erro = card.querySelector('[data-status]');
-      return painel ? { resultado: 'sucesso', texto: painel.innerText.trim(), whatsapp: painel.querySelector('a')?.href || null, abriuSozinho: window.__abriuSozinho, url: location.href }
-        : erro && erro.innerText.trim() && !erro.className.includes('hidden') ? { resultado: 'erro', texto: erro.innerText.trim(), whatsapp: erro.querySelector('a')?.href || null } : null;
+      return painel ? { resultado: 'sucesso', texto: painel.innerText.trim(), whatsapp: painel.querySelector('a')?.href || null, abriuSozinho: window.__abriuSozinho, pixelCarregadoNoTeste: window.__pixelCarregado, fbq: window.__fbq, url: location.href }
+        : erro && erro.innerText.trim() && !erro.className.includes('hidden') ? { resultado: 'erro', texto: erro.innerText.trim(), whatsapp: erro.querySelector('a')?.href || null, fbq: window.__fbq } : null;
     })()`);
     if (estado) return estado;
     await espera(200);
