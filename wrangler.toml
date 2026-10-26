@@ -10,7 +10,7 @@ compatibility_date = "2026-10-01"
 binding = "DB"
 database_name = "lpnexo-leads"
 # Troque pelo "Database ID" do banco criado no painel (não é segredo).
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "ec739bc5-fd96-4863-8182-afdbc42bf567"
 migrations_dir = "migrations"
 
 [vars]
