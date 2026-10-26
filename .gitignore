@@ -7,3 +7,8 @@ node_modules/
 /Imagem 2/
 /reference/
 /WhatsApp Image*.jpeg
+
+# Cloudflare / wrangler (segredos locais e arquivos gerados)
+.dev.vars
+.env
+.wrangler/

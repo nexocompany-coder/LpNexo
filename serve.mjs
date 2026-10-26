@@ -3,7 +3,9 @@ import { readFile, stat } from 'node:fs/promises';
 import { extname, join, normalize, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const ROOT = resolve(fileURLToPath(new URL('.', import.meta.url)));
+// Só a pasta public/ é servida (igual ao Cloudflare Pages).
+// Para testar o formulário com a caixa de entrada, use `npm run dev` (wrangler).
+const ROOT = resolve(fileURLToPath(new URL('./public', import.meta.url)));
 const PORT = Number(process.env.PORT) || 3000;
 
 const MIME = {
