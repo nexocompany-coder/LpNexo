@@ -114,6 +114,26 @@
       .btn-cta, .btn-cta svg, .btn-cta::after { transition: none; }
     }
   </style>
+  <script>
+    // Configuração da LP. Nada aqui é segredo: são valores públicos.
+    window.NEXO = {
+      metaPixelId: '944996835334662',   // ID do Pixel da Meta (só números). Vazio = Pixel desligado.
+      pixelDominios: ['lpnexo.com.br', 'www.lpnexo.com.br'], // Pixel só dispara no site oficial (testes não sujam o Pixel)
+      whatsappNumero: '5577981259887',  // DDI + DDD + número, só dígitos
+      whatsappMensagem: 'Olá! Acabei de preencher o formulário da Nexo.', // Mensagem pronta do botão "Falar no WhatsApp"
+      turnstileSiteKey: '0x4AAAAAAFmCOU52nIcNM-xW', // Chave pública (site key) do widget Turnstile
+    };
+    if (NEXO.metaPixelId && NEXO.pixelDominios.includes(location.hostname)) {
+      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+      document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', NEXO.metaPixelId);
+      fbq('track', 'PageView');
+    }
+  </script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=nexoTurnstile" async defer></script>
 </head>
 <body class="font-sans text-white antialiased overflow-x-hidden">
 
@@ -198,7 +218,11 @@
             <svg class="!left-auto right-[16px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
           </label>
 
-          <div class="pt-[3px]">
+          <div class="relative pt-[3px]">
+            <div class="absolute -left-[9999px] top-0 h-px w-px overflow-hidden" aria-hidden="true">
+              <label>Não preencha este campo<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+            </div>
+            <div data-turnstile></div>
             <button type="submit" class="btn-cta h-[49px] w-full text-[11.7px] tracking-[.02em] md:h-[54px] md:text-[14px]">
               <span data-label>Receber mais informações</span>
               <svg class="h-[15px] w-[15px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -647,7 +671,11 @@
             <svg class="!left-auto right-[16px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
           </label>
 
-          <div class="pt-[3px]">
+          <div class="relative pt-[3px]">
+            <div class="absolute -left-[9999px] top-0 h-px w-px overflow-hidden" aria-hidden="true">
+              <label>Não preencha este campo<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+            </div>
+            <div data-turnstile></div>
             <button type="submit" class="btn-cta h-[49px] w-full text-[11.7px] tracking-[.02em] md:h-[54px] md:text-[14px]">
               <span data-label>Receber mais informações</span>
               <svg class="h-[15px] w-[15px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -668,12 +696,10 @@
 
 <footer class="border-t border-white/[.06] bg-ink py-[28px] text-center text-[11.5px] text-[#8C95B8] md:text-[13px]">
   © <span id="year">2026</span> Nexo. Todos os direitos reservados.
+  · <a href="/privacidade" class="underline decoration-white/20 underline-offset-2 hover:text-white focus-visible:text-white focus-visible:outline-none active:opacity-70">Política de Privacidade</a>
 </footer>
 
 <script>
-  // Endpoint do formulário (webhook/CRM). Deixe vazio para apenas simular o envio.
-  const FORM_ENDPOINT = '';
-
   document.getElementById('year').textContent = new Date().getFullYear();
 
   // Criativos: cada vídeo só baixa e toca enquanto aparece na tela.
@@ -716,6 +742,7 @@
     input.value = v;
   };
 
+  // Só os campos visíveis do formulário (o campo isca fica de fora)
   const isValid = (el) => {
     if (el.name === 'whatsapp') return el.value.replace(/\D/g, '').length >= 10;
     return el.checkValidity();
@@ -723,13 +750,100 @@
 
   const clearInvalid = (e) => e.target.closest('.field')?.classList.remove('is-invalid');
 
+  // ---- Rastreamento: UTMs e IDs do anúncio, guardados na sessão ----
+  const CHAVES_RASTREIO = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'campaign_id', 'adset_id', 'ad_id', 'fbclid'];
+  const rastreio = (() => {
+    const params = new URLSearchParams(location.search);
+    const daUrl = {};
+    CHAVES_RASTREIO.forEach((chave) => {
+      const valor = params.get(chave);
+      if (valor) daUrl[chave] = valor.slice(0, 500);
+    });
+    try {
+      // Uma nova visita com parâmetros substitui a anterior; sem parâmetros, mantém o que já havia.
+      if (Object.keys(daUrl).length) sessionStorage.setItem('nexo_rastreio', JSON.stringify(daUrl));
+      if (!sessionStorage.getItem('nexo_referrer')) sessionStorage.setItem('nexo_referrer', document.referrer || '');
+      return Object.keys(daUrl).length ? daUrl : JSON.parse(sessionStorage.getItem('nexo_rastreio') || '{}');
+    } catch {
+      return daUrl;
+    }
+  })();
+  const referrerInicial = (() => {
+    try { return sessionStorage.getItem('nexo_referrer') || document.referrer || ''; } catch { return document.referrer || ''; }
+  })();
+
+  // ---- Turnstile (antirrobô), invisível; só aparece se a Cloudflare desconfiar ----
+  const LOCAL = ['localhost', '127.0.0.1'].includes(location.hostname);
+  const SITE_KEY = LOCAL ? '1x00000000000000000000BB' : NEXO.turnstileSiteKey; // chave de teste da Cloudflare no Mac
+  const widgets = new Map();
+  window.nexoTurnstile = () => {
+    document.querySelectorAll('.lead-form').forEach((form) => {
+      const estado = {};
+      estado.id = turnstile.render(form.querySelector('[data-turnstile]'), {
+        sitekey: SITE_KEY,
+        execution: 'execute',
+        appearance: 'interaction-only',
+        language: 'pt-br',
+        callback: (token) => estado.ok?.(token),
+        'error-callback': () => estado.falha?.(),
+        'timeout-callback': () => estado.falha?.(),
+      });
+      widgets.set(form, estado);
+    });
+  };
+  const tokenTurnstile = (form) => new Promise((resolve, reject) => {
+    const estado = widgets.get(form);
+    if (!estado || !window.turnstile) return reject(new Error('turnstile'));
+    const timer = setTimeout(() => reject(new Error('turnstile')), 60000);
+    estado.ok = (token) => { clearTimeout(timer); resolve(token); };
+    estado.falha = () => { clearTimeout(timer); reject(new Error('turnstile')); };
+    turnstile.reset(estado.id);
+    turnstile.execute(estado.id);
+  });
+
+  // ---- WhatsApp: só por clique, nunca abre sozinho ----
+  const linkWhatsApp = () => NEXO.whatsappNumero
+    ? `https://wa.me/${NEXO.whatsappNumero}${NEXO.whatsappMensagem ? `?text=${encodeURIComponent(NEXO.whatsappMensagem)}` : ''}`
+    : '';
+  const botaoWhatsApp = () => {
+    const href = linkWhatsApp();
+    if (!href) return '';
+    return `<a href="${href}" target="_blank" rel="noopener" class="btn-cta h-[49px] w-full text-[11.7px] tracking-[.02em] md:h-[54px] md:text-[14px]">Falar no WhatsApp
+      <svg class="h-[15px] w-[15px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>`;
+  };
+
+  const MENSAGENS_ERRO = {
+    muitos_envios: 'Muitas tentativas em pouco tempo. Aguarde alguns minutos e tente de novo.',
+    verificacao_falhou: 'Não conseguimos confirmar o envio. Tente de novo.',
+    dados_invalidos: 'Confira seu nome e seu WhatsApp e tente de novo.',
+  };
+  const ERRO_PADRAO = 'Não conseguimos enviar seus dados agora. Tente de novo em instantes.';
+  const VERSAO_CONSENTIMENTO = 'v1-2026-10-25'; // texto: "Garantimos a segurança total de seus dados. Serão usados apenas para contato."
+
   document.querySelectorAll('.lead-form').forEach((form) => {
     const status = form.querySelector('[data-status]');
     const phone = form.elements.whatsapp;
 
-    const showStatus = (msg, ok) => {
-      status.textContent = msg;
-      status.className = `rounded-[12px] px-3 py-2 text-[12.5px] font-semibold ${ok ? 'bg-[#1E8E5A]/20 text-[#7EE2B0]' : 'bg-[#FF6E8C]/15 text-[#FF9FB3]'}`;
+    const mostrarErro = (msg) => {
+      status.className = 'space-y-[9px]';
+      status.innerHTML = '<span class="block rounded-[12px] bg-[#FF6E8C]/15 px-3 py-2 text-[12.5px] font-semibold text-[#FF9FB3]"></span>';
+      status.firstChild.textContent = msg;
+      const whats = botaoWhatsApp();
+      if (whats) {
+        status.insertAdjacentHTML('beforeend', '<span class="block text-center text-[12px] text-[#AEB5CF]">Ou fale com a gente agora:</span>' + whats);
+      }
+    };
+
+    const mostrarSucesso = () => {
+      const card = form.parentElement;
+      card.querySelectorAll(':scope > h2, :scope > p, :scope > form').forEach((el) => { el.hidden = true; });
+      const painel = document.createElement('div');
+      painel.setAttribute('role', 'status');
+      painel.tabIndex = -1;
+      painel.className = 'space-y-[18px] py-[8px] text-center outline-none';
+      painel.innerHTML = `<h2 class="text-[20px] font-extrabold leading-tight text-white md:text-[24px]">Recebemos seus dados</h2>${botaoWhatsApp()}`;
+      card.appendChild(painel);
+      painel.focus();
     };
 
     phone.addEventListener('input', () => maskPhone(phone));
@@ -738,11 +852,12 @@
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const fields = [...form.querySelectorAll('input, select')];
+      const fields = [...form.querySelectorAll('.field input, .field select')];
       const invalid = fields.filter((el) => !isValid(el));
       fields.forEach((el) => el.closest('.field').classList.toggle('is-invalid', invalid.includes(el)));
       if (invalid.length) {
-        showStatus('Preencha todos os campos corretamente.', false);
+        status.className = 'rounded-[12px] px-3 py-2 text-[12.5px] font-semibold bg-[#FF6E8C]/15 text-[#FF9FB3]';
+        status.textContent = 'Preencha todos os campos corretamente.';
         invalid[0].focus();
         return;
       }
@@ -751,21 +866,36 @@
       const label = btn.querySelector('[data-label]');
       btn.disabled = true;
       label.textContent = 'Enviando...';
-
-      const data = Object.fromEntries(new FormData(form));
-      data.whatsapp = '+55' + data.whatsapp.replace(/\D/g, '');
-      data.pagina = location.href;
-      data.origem = form.closest('#aviso') ? 'aviso' : 'topo';
+      status.className = 'hidden';
 
       try {
-        if (FORM_ENDPOINT) {
-          const res = await fetch(FORM_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-          if (!res.ok) throw new Error(res.status);
-        }
-        form.reset();
-        showStatus('Recebemos seus dados! Um especialista entrará em contato em breve.', true);
-      } catch {
-        showStatus('Não foi possível enviar agora. Tente novamente em instantes.', false);
+        const dados = Object.fromEntries(new FormData(form));
+        const corpo = {
+          nome: dados.nome,
+          telefone: `+55 ${dados.whatsapp}`,
+          email: dados.email,
+          empresa: dados.instagram,
+          mensagem: `Carros por mês: ${dados.carros_mes}`,
+          website: dados.website || '',
+          turnstile: await tokenTurnstile(form),
+          consentimento: { versao_texto: VERSAO_CONSENTIMENTO },
+          ...rastreio,
+          pagina: location.href,
+          referrer: referrerInicial,
+        };
+        const resp = await fetch('/api/lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(corpo),
+        });
+        const resultado = await resp.json().catch(() => ({}));
+        if (resp.status !== 200 || !resultado.ok) throw new Error(resultado.erro || 'falha');
+
+        // Só aqui o lead está gravado.
+        if (window.fbq) fbq('track', 'Lead', {}, { eventID: resultado.id });
+        mostrarSucesso();
+      } catch (erro) {
+        mostrarErro(MENSAGENS_ERRO[erro.message] || (erro.message === 'turnstile' ? MENSAGENS_ERRO.verificacao_falhou : ERRO_PADRAO));
       } finally {
         btn.disabled = false;
         label.textContent = 'Receber mais informações';

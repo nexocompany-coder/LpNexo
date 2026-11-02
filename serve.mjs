@@ -3,7 +3,9 @@ import { readFile, stat } from 'node:fs/promises';
 import { extname, join, normalize, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const ROOT = resolve(fileURLToPath(new URL('.', import.meta.url)));
+// Só a pasta public/ é servida (igual ao Cloudflare Pages).
+// Para testar o formulário com a caixa de entrada, use `npm run dev` (wrangler).
+const ROOT = resolve(fileURLToPath(new URL('./public', import.meta.url)));
 const PORT = Number(process.env.PORT) || 3000;
 
 const MIME = {
@@ -34,7 +36,10 @@ createServer(async (req, res) => {
       res.writeHead(403).end('Forbidden');
       return;
     }
-    if ((await stat(file).catch(() => null))?.isDirectory()) file = join(file, 'index.html');
+    const info = await stat(file).catch(() => null);
+    if (info?.isDirectory()) file = join(file, 'index.html');
+    // /privacidade -> privacidade.html (igual ao Cloudflare Pages)
+    else if (!info && !extname(file)) file += '.html';
     const body = await readFile(file);
     const headers = {
       'Content-Type': MIME[extname(file).toLowerCase()] || 'application/octet-stream',

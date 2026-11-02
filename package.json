@@ -1,0 +1,14 @@
+{
+  "name": "lpnexo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev --port 8788",
+    "db:local": "wrangler d1 migrations apply lpnexo-leads --local",
+    "db:remoto": "wrangler d1 migrations apply lpnexo-leads --remote",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.152.0"
+  }
+}

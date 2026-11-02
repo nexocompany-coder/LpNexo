@@ -1,0 +1,18 @@
+# Configuração do Cloudflare Pages (projeto da LP).
+# Não coloque segredos aqui: eles entram pelo painel da Cloudflare
+# (Settings > Variables and Secrets) ou pelo arquivo .dev.vars no seu Mac.
+
+name = "lpnexo"
+pages_build_output_dir = "./public"
+compatibility_date = "2026-10-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "lpnexo-leads"
+# Troque pelo "Database ID" do banco criado no painel (não é segredo).
+database_id = "ec739bc5-fd96-4863-8182-afdbc42bf567"
+migrations_dir = "migrations"
+
+[vars]
+# Máximo de envios do formulário por origem, a cada hora.
+LIMITE_ENVIOS_POR_HORA = "10"
