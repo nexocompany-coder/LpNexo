@@ -59,6 +59,18 @@ test('campos opcionais vazios não impedem o envio', async () => {
   assert.equal(r.status, 200);
 });
 
+test('mesma tentativa enviada duas vezes (id_envio igual) grava um lead só', async () => {
+  const idEnvio = crypto.randomUUID();
+  const r1 = await enviar(OK, leadFalso({ nome: 'Repetido Falso', id_envio: idEnvio }));
+  const r2 = await enviar(OK, leadFalso({ nome: 'Repetido Falso', id_envio: idEnvio }));
+  assert.equal(r1.status, 200);
+  assert.equal(r2.status, 200);
+  assert.equal((await r1.json()).id, idEnvio);
+  assert.equal((await r2.json()).id, idEnvio);
+  const { leads } = await caixa('?limit=200');
+  assert.equal(leads.filter((l) => l.nome === 'Repetido Falso').length, 1);
+});
+
 test('nome ou telefone faltando é recusado', async () => {
   assert.equal((await enviar(OK, leadFalso({ nome: '' }))).status, 400);
   assert.equal((await enviar(OK, leadFalso({ telefone: '123' }))).status, 400);

@@ -3,6 +3,7 @@
 import { CAMPOS_RASTREIO, agoraISO, dentroDoLimite, json, registrar } from '../../lib/caixa.js';
 
 const TAMANHO_MAXIMO = 10 * 1024;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 
 const recusar = (motivo, status, erro = motivo) => {
   registrar('lead_recusado', { motivo });
@@ -75,15 +76,20 @@ export const onRequestPost = async ({ request, env }) => {
   const token = typeof dados.turnstile === 'string' ? dados.turnstile : '';
   if (!token || token.length > 2048 || !(await verificarTurnstile(env, token, ip))) return recusar('turnstile', 403, 'verificacao_falhou');
 
-  const id = crypto.randomUUID();
+  // O navegador manda um id_envio e repete o mesmo se precisar tentar de novo:
+  // assim uma nova tentativa nunca grava o lead duas vezes.
+  const idEnvio = typeof dados.id_envio === 'string' ? dados.id_envio.toLowerCase() : '';
+  const id = UUID.test(idEnvio) ? idEnvio : crypto.randomUUID();
   const agora = agoraISO();
+  let gravou;
   try {
-    await env.DB.prepare(
+    gravou = await env.DB.prepare(
       `INSERT INTO leads (id, recebido_em, nome, telefone, email, empresa, mensagem,
          utm_source, utm_medium, utm_campaign, utm_content, utm_term,
          campaign_id, adset_id, ad_id, fbclid, pagina, referrer,
          consentimento_aceito_em, consentimento_versao_texto)
-       VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20)`,
+       VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20)
+       ON CONFLICT (id) DO NOTHING`,
     ).bind(
       id, agora, nome, telefone, email, empresa, mensagem,
       rastreio.utm_source, rastreio.utm_medium, rastreio.utm_campaign, rastreio.utm_content, rastreio.utm_term,
@@ -94,7 +100,7 @@ export const onRequestPost = async ({ request, env }) => {
     return recusar('gravacao', 500, 'falha_ao_gravar');
   }
 
-  registrar('lead_aceito');
+  registrar(gravou.meta?.changes === 0 ? 'lead_repetido' : 'lead_aceito');
   return json({ ok: true, id });
 };
 
