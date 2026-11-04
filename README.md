@@ -55,6 +55,10 @@ Ficam no painel: **Workers & Pages → projeto → Settings → Variables and Se
 - Telegram fora do ar, token ou grupo errado: o lead continua gravado e o log mostra só
   `aviso_telegram_falhou` com o código, sem dados pessoais.
 - Sem `TELEGRAM_BOT_TOKEN` ou `TELEGRAM_CHAT_ID`: a LP funciona normal, só sem aviso.
+- Grupo virou supergrupo (o id muda): o Telegram avisa o novo id, a LP guarda no D1
+  (tabela `configuracao`, migração `0002`), reenvia o aviso e registra
+  `aviso_telegram_grupo_migrou` no log. Os próximos vão direto ao novo id, sem mexer no
+  segredo. Trocar o `TELEGRAM_CHAT_ID` para outro grupo ignora o id guardado.
 
 ### Trocar o token do CRM
 

@@ -8,15 +8,27 @@ import { carrosPorMes, horarioDeBrasilia, linkDoWhatsApp, montarAviso, origemLeg
 
 const SITE = 'https://lpnexo.com.br';
 const SEGREDOS = { TELEGRAM_BOT_TOKEN: '123456:token-falso-de-teste', TELEGRAM_CHAT_ID: '-1001234567890' };
+const GRUPO_ANTIGO = '-4012345678'; // grupo comum, antes de virar supergrupo
+const SUPERGRUPO = '-1009876543210';
 
-// Banco falso: guarda os ids gravados e responde como o D1.
-const bancoFalso = () => {
+// Banco falso: guarda os ids gravados e a tabela configuracao, e responde como o D1.
+// semConfiguracao imita o banco antes da migração 0002 (tabela ainda não existe).
+const bancoFalso = ({ semConfiguracao = false } = {}) => {
   const ids = new Set();
+  const configuracao = new Map();
   return {
     ids,
+    configuracao,
     prepare(sql) {
       return {
         bind(...args) {
+          if (sql.includes('configuracao')) {
+            const semTabela = async () => { if (semConfiguracao) throw new Error('no such table: configuracao'); };
+            return {
+              first: async () => { await semTabela(); return configuracao.has(args[0]) ? { valor: configuracao.get(args[0]) } : null; },
+              run: async () => { await semTabela(); configuracao.set(args[0], args[1]); return { meta: { changes: 1 } }; },
+            };
+          }
           return {
             first: async () => ({ contagem: 1 }), // limite de envios
             run: async () => {
@@ -49,8 +61,16 @@ beforeEach(() => {
       return new Response(JSON.stringify({ success: true }), { status: 200 });
     }
     if (endereco.startsWith('https://api.telegram.org/')) {
-      chamadasAoTelegram.push({ endereco, corpo: JSON.parse(opcoes.body) });
+      const corpo = JSON.parse(opcoes.body);
+      chamadasAoTelegram.push({ endereco, corpo });
       if (comportamentoDoTelegram === 'rede') throw new TypeError('fetch failed');
+      if (comportamentoDoTelegram === 'migrou' && corpo.chat_id === GRUPO_ANTIGO) {
+        return new Response(JSON.stringify({
+          ok: false, error_code: 400,
+          description: 'Bad Request: group chat was upgraded to a supergroup chat',
+          parameters: { migrate_to_chat_id: Number(SUPERGRUPO) },
+        }), { status: 400 });
+      }
       if (comportamentoDoTelegram === '500') return new Response('{"ok":false}', { status: 500 });
       return new Response(JSON.stringify({ ok: true, result: {} }), { status: 200 });
     }
@@ -129,6 +149,7 @@ test('a resposta do formulário não espera o Telegram', async () => {
   };
   const { resposta, emSegundoPlano } = await enviar(env, leadFalso());
   assert.equal(resposta.status, 200, 'respondeu com o Telegram ainda pendente');
+  while (!liberarTelegram) await new Promise((r) => setTimeout(r, 1)); // o aviso chega ao Telegram depois
   liberarTelegram();
   await emSegundoPlano();
 });
@@ -180,6 +201,67 @@ test('envio recusado (nome faltando) não gera aviso', async () => {
   assert.equal(resposta.status, 400);
   await emSegundoPlano();
   assert.equal(chamadasAoTelegram.length, 0);
+});
+
+test('grupo virou supergrupo: guarda o novo id no D1, reenvia e os próximos vão direto', async () => {
+  comportamentoDoTelegram = 'migrou';
+  const env = ambiente({ TELEGRAM_CHAT_ID: GRUPO_ANTIGO });
+
+  const primeiro = await enviar(env, leadFalso());
+  assert.equal(primeiro.resposta.status, 200);
+  await primeiro.emSegundoPlano();
+  assert.deepEqual(chamadasAoTelegram.map((c) => c.corpo.chat_id), [GRUPO_ANTIGO, SUPERGRUPO], 'tentou o antigo e reenviou ao novo');
+  assert.equal(env.DB.configuracao.get(`telegram_chat_id:${GRUPO_ANTIGO}`), SUPERGRUPO, 'novo id guardado no D1');
+  assert.ok(logs.some((l) => l.includes('aviso_telegram_grupo_migrou') && l.includes('"novo_id_guardado":true')));
+  assert.ok(logs.some((l) => l.includes('aviso_telegram_enviado')));
+  assert.ok(!logs.some((l) => l.includes('aviso_telegram_falhou')));
+
+  chamadasAoTelegram = [];
+  const segundo = await enviar(env, leadFalso({ nome: 'Ciclano Falso' }));
+  await segundo.emSegundoPlano();
+  assert.deepEqual(chamadasAoTelegram.map((c) => c.corpo.chat_id), [SUPERGRUPO], 'o próximo vai direto ao supergrupo');
+
+  for (const pessoal of ['Fulano', 'Ciclano', '98888', 'loja_falsa', 'token-falso']) {
+    assert.ok(!logs.join('\n').includes(pessoal), `log não pode ter "${pessoal}"`);
+  }
+});
+
+test('grupo migrou e o banco ainda não tem a tabela: o aviso chega mesmo assim', async () => {
+  comportamentoDoTelegram = 'migrou';
+  const env = ambiente({ TELEGRAM_CHAT_ID: GRUPO_ANTIGO, DB: bancoFalso({ semConfiguracao: true }) });
+  const { resposta, emSegundoPlano } = await enviar(env, leadFalso());
+  assert.equal(resposta.status, 200);
+  await emSegundoPlano();
+  assert.deepEqual(chamadasAoTelegram.map((c) => c.corpo.chat_id), [GRUPO_ANTIGO, SUPERGRUPO]);
+  assert.ok(logs.some((l) => l.includes('aviso_telegram_grupo_migrou') && l.includes('"novo_id_guardado":false')));
+  assert.ok(logs.some((l) => l.includes('aviso_telegram_enviado')));
+});
+
+test('trocar o TELEGRAM_CHAT_ID para outro grupo ignora o id guardado do grupo antigo', async () => {
+  const env = ambiente({ TELEGRAM_CHAT_ID: '-1005555555555' });
+  env.DB.configuracao.set(`telegram_chat_id:${GRUPO_ANTIGO}`, SUPERGRUPO);
+  const { emSegundoPlano } = await enviar(env, leadFalso());
+  await emSegundoPlano();
+  assert.deepEqual(chamadasAoTelegram.map((c) => c.corpo.chat_id), ['-1005555555555']);
+});
+
+test('reenvio ao supergrupo também falha: lead gravado e log de falha', async () => {
+  comportamentoDoTelegram = 'migrou';
+  const env = ambiente({ TELEGRAM_CHAT_ID: GRUPO_ANTIGO });
+  const anterior = globalThis.fetch;
+  globalThis.fetch = async (url, opcoes) => {
+    if (String(url).startsWith('https://api.telegram.org/') && JSON.parse(opcoes.body).chat_id === SUPERGRUPO) {
+      chamadasAoTelegram.push({ corpo: JSON.parse(opcoes.body) });
+      return new Response('{"ok":false}', { status: 403 });
+    }
+    return anterior(url, opcoes);
+  };
+  const { resposta, emSegundoPlano } = await enviar(env, leadFalso());
+  assert.equal(resposta.status, 200);
+  assert.equal(env.DB.ids.size, 1);
+  await emSegundoPlano();
+  assert.equal(chamadasAoTelegram.length, 2, 'reenvia uma vez só, sem ficar em loop');
+  assert.ok(logs.some((l) => l.includes('aviso_telegram_falhou') && l.includes('403')));
 });
 
 test('origem legível: as mesmas regras do CRM', () => {
