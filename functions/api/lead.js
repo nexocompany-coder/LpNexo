@@ -1,6 +1,7 @@
 // POST /api/lead — recebe o formulário da LP e grava na caixa de entrada.
 // Público, mas nunca devolve dados de leads: só {ok, id} ou {erro}.
 import { CAMPOS_RASTREIO, agoraISO, dentroDoLimite, json, registrar } from '../../lib/caixa.js';
+import { avisarNoTelegram } from '../../lib/aviso.js';
 
 const TAMANHO_MAXIMO = 10 * 1024;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
@@ -28,7 +29,7 @@ const verificarTurnstile = async (env, token, ip) => {
   return resultado.success === true;
 };
 
-export const onRequestPost = async ({ request, env }) => {
+export const onRequestPost = async ({ request, env, waitUntil }) => {
   const url = new URL(request.url);
 
   // Só aceita envios feitos a partir do próprio site (mesmo domínio).
@@ -100,7 +101,15 @@ export const onRequestPost = async ({ request, env }) => {
     return recusar('gravacao', 500, 'falha_ao_gravar');
   }
 
-  registrar(gravou.meta?.changes === 0 ? 'lead_repetido' : 'lead_aceito');
+  const novo = gravou.meta?.changes !== 0;
+  registrar(novo ? 'lead_aceito' : 'lead_repetido');
+
+  // Aviso no Telegram: só para lead novo (o repetido já foi avisado) e em
+  // segundo plano, depois de gravar. A resposta não espera o Telegram.
+  if (novo) {
+    const aviso = avisarNoTelegram(env, { id, recebido_em: agora, nome, telefone, empresa, mensagem, ...rastreio });
+    if (typeof waitUntil === 'function') waitUntil(aviso);
+  }
   return json({ ok: true, id });
 };
 

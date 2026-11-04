@@ -8,7 +8,7 @@ Landing page da Nexo (lpnexo.com.br), publicada pelo Cloudflare Pages a partir d
 Visitante preenche o formulário
         │  POST /api/lead  (Turnstile + campo isca + limite de envios)
         ▼
-Caixa de entrada (banco D1 na Cloudflare)
+Caixa de entrada (banco D1 na Cloudflare) ──► aviso no grupo do Telegram (em segundo plano)
         │  GET /api/inbox  e  POST /api/inbox/ack  (exigem o token)
         ▼
 CRM no Mac busca os leads e confirma o recebimento
@@ -39,6 +39,22 @@ Ficam no painel: **Workers & Pages → projeto → Settings → Variables and Se
 | `TURNSTILE_SECRET` | Chave secreta do Turnstile |
 | `INBOX_TOKEN` | Token que o CRM usa para ler a caixa (mínimo 32 caracteres) |
 | `RATE_SALT` | Segredo usado no código embaralhado do IP |
+| `TELEGRAM_BOT_TOKEN` | Token do bot que avisa lead novo (vem do @BotFather) |
+| `TELEGRAM_CHAT_ID` | Id do grupo do Telegram que recebe o aviso |
+
+**Depois de gravar ou trocar qualquer segredo, é preciso uma nova publicação de PRODUÇÃO**
+(Deployments → ⋯ → Retry deployment, ou um envio novo na `main`) para ele valer.
+
+## Aviso de lead novo no Telegram (`lib/aviso.js`)
+
+- Sai logo depois de gravar o lead, em segundo plano (`waitUntil`): o formulário nunca espera
+  o Telegram nem quebra por causa dele.
+- Só para lead **novo**: o mesmo envio repetido (mesmo `id_envio`) não gera outro aviso.
+- No grupo vão nome, carros por mês, Instagram, origem (as mesmas regras do CRM), horário de
+  Brasília e o botão "Chamar no WhatsApp". **E-mail e consentimento não vão.**
+- Telegram fora do ar, token ou grupo errado: o lead continua gravado e o log mostra só
+  `aviso_telegram_falhou` com o código, sem dados pessoais.
+- Sem `TELEGRAM_BOT_TOKEN` ou `TELEGRAM_CHAT_ID`: a LP funciona normal, só sem aviso.
 
 ### Trocar o token do CRM
 
@@ -74,6 +90,7 @@ npm install
 npm run db:local        # cria o banco local (uma vez)
 npm run dev             # http://127.0.0.1:8788 com formulário e caixa funcionando
 npm test                # testes da caixa (precisa também da instância de falha na porta 8789)
+node --test tests/aviso.test.mjs   # só os testes do aviso no Telegram (não precisam de servidor)
 ```
 
 O arquivo `.dev.vars` (não vai para o git) guarda os segredos de teste locais:
